@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Status Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --red: #dc2626;
+            --orange: #ea580c;
+            --blue: #2563eb;
+            --green: #16a34a;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--black);
+            background: var(--white);
+        }
+
+        /* ============ NAVIGATION ============ */
+        nav {
+            border-bottom: 1px solid var(--black);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            color: var(--gray-500);
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--black);
+        }
+
+        /* ============ MAIN LAYOUT ============ */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: 40px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-top: 8px;
+            font-weight: 400;
+        }
+
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        /* ============ BUTTONS ============ */
+        button {
+            font-family: inherit;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            border: 1px solid var(--black);
+            background: var(--white);
+            color: var(--black);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        button.primary {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        button.primary:hover {
+            background: var(--gray-500);
+        }
+
+        button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        button.small {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+
+        /* ============ INPUTS ============ */
+        input[type="text"],
+        input[type="email"],
+        select {
+            font-family: inherit;
+            font-size: 14px;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--black);
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            color: var(--gray-500);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        /* ============ SURVEY STYLES ============ */
+        .survey-container {
+            max-width: 600px;
+        }
+
+        .survey-step {
+            display: none;
+        }
+
+        .survey-step.active {
+            display: block;
+        }
+
+        .client-select-grid {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .client-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .client-checkbox:hover {
+            border-color: var(--black);
+        }
+
+        .client-checkbox.selected {
+            border-color: var(--black);
+            background: var(--gray-100);
+        }
+
+        .client-checkbox input {
+            display: none;
+        }
+
+        .client-checkbox .check {
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--gray-300);
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .client-checkbox.selected .check {
+            border-color: var(--black);
+            background: var(--black);
+        }
+
+        .client-checkbox.selected .check::after {
+            content: '✓';
+            color: var(--white);
+            font-size: 12px;
+        }
+
+        .add-client-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .add-client-row input {
+            flex: 1;
+        }
+
+        /* Question card styling */
+        .question-card {
+            margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .question-card:last-child {
+            border-bottom: none;
+        }
+
+        .question-number {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray-400);
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover {
+            border-color: var(--gray-400);
+        }
+
+        .option-item.selected {
+            border-color: var(--black);
+            background: var(--gray-100);
+        }
+
+        .option-item input {
+            display: none;
+        }
+
+        .option-radio {
+            width: 18px;
+            height: 18px;
+            border: 1px solid var(--gray-300);
+            border-radius: 50%;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-radio {
+            border-color: var(--black);
+        }
+
+        .option-item.selected .option-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--black);
+            border-radius: 50%;
+        }
+
+        .option-label {
+            flex: 1;
+        }
+
+        .client-header {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            padding: 16px 0;
+            border-bottom: 1px solid var(--black);
+            margin-bottom: 32px;
+        }
+
+        .client-nav {
+            display: flex;
+            gap: 8px;
+            margin-top: 32px;
+        }
+
+        .progress-bar {
+            height: 2px;
+            background: var(--gray-200);
+            margin-bottom: 40px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--black);
+            transition: width 0.3s;
+        }
+
+        .survey-complete {
+            text-align: center;
+            padding: 80px 40px;
+        }
+
+        .survey-complete h2 {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 16px;
+        }
+
+        .survey-complete p {
+            color: var(--gray-500);
+        }
+
+        /* ============ DASHBOARD STYLES ============ */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+        }
+
+        .week-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .week-selector select {
+            width: auto;
+            padding: 8px 12px;
+        }
+
+        .dashboard-grid {
+            border: 1px solid var(--black);
+        }
+
+        .dashboard-header-row {
+            display: grid;
+            grid-template-columns: 200px repeat(6, 1fr);
+            border-bottom: 1px solid var(--black);
+            background: var(--gray-100);
+        }
+
+        .dashboard-header-cell {
+            padding: 16px 12px;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-align: center;
+            border-right: 1px solid var(--gray-300);
+        }
+
+        .dashboard-header-cell:first-child {
+            text-align: left;
+        }
+
+        .dashboard-header-cell:last-child {
+            border-right: none;
+        }
+
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 200px repeat(6, 1fr);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .dashboard-row:last-child {
+            border-bottom: none;
+        }
+
+        .dashboard-cell {
+            padding: 20px 12px;
+            text-align: center;
+            border-right: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dashboard-cell:first-child {
+            justify-content: flex-start;
+            font-weight: 500;
+        }
+
+        .dashboard-cell:last-child {
+            border-right: none;
+        }
+
+        .metric-cell {
+            width: 100%;
+            height: 100%;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .metric-cell.red { background: var(--red); color: var(--white); }
+        .metric-cell.orange { background: var(--orange); color: var(--white); }
+        .metric-cell.blue { background: var(--blue); color: var(--white); }
+        .metric-cell.green { background: var(--green); color: var(--white); }
+        .metric-cell.none { background: var(--gray-100); color: var(--gray-400); }
+
+        .legend {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+        }
+
+        .legend-color.red { background: var(--red); }
+        .legend-color.orange { background: var(--orange); }
+        .legend-color.blue { background: var(--blue); }
+        .legend-color.green { background: var(--green); }
+
+        .no-data {
+            text-align: center;
+            padding: 80px 40px;
+            color: var(--gray-500);
+        }
+
+        /* ============ ADMIN STYLES ============ */
+        .admin-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 40px;
+        }
+
+        .admin-tab {
+            padding: 12px 24px;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .admin-tab:hover {
+            color: var(--black);
+        }
+
+        .admin-tab.active {
+            color: var(--black);
+            border-bottom-color: var(--black);
+        }
+
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            padding: 24px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray-500);
+        }
+
+        .clients-list {
+            border: 1px solid var(--gray-200);
+        }
+
+        .client-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .client-row:last-child {
+            border-bottom: none;
+        }
+
+        .client-name {
+            font-weight: 500;
+        }
+
+        .client-status {
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--gray-400);
+        }
+
+        .client-status.active {
+            color: var(--green);
+        }
+
+        .client-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .responses-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--gray-200);
+        }
+
+        .responses-table th,
+        .responses-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .responses-table th {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: var(--gray-100);
+            font-weight: 500;
+        }
+
+        .responses-table td {
+            font-size: 13px;
+        }
+
+        .response-score {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--white);
+        }
+
+        .response-score.s1 { background: var(--red); }
+        .response-score.s2 { background: var(--orange); }
+        .response-score.s3 { background: var(--blue); }
+        .response-score.s4 { background: var(--green); }
+
+        .filter-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .filter-row select {
+            width: 200px;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            main {
+                padding: 40px 20px;
+            }
+
+            .dashboard-header-row,
+            .dashboard-row {
+                grid-template-columns: 120px repeat(6, 1fr);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Account Status Tracker</div>
+        <div class="nav-links">
+            <a href="#" data-section="survey" class="active">Survey</a>
+            <a href="#" data-section="dashboard">Dashboard</a>
+            <a href="#" data-section="admin">Admin</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- ============ SURVEY SECTION ============ -->
+        <section id="survey" class="active">
+            <div class="survey-container">
+                <h1 class="page-title">Weekly Check-in</h1>
+
+                <!-- Step 1: Email -->
+                <div class="survey-step active" data-step="1">
+                    <div class="form-group">
+                        <label>Your Email</label>
+                        <input type="email" id="survey-email" placeholder="you@company.com">
+                    </div>
+                    <button id="email-next" class="primary">Continue</button>
+                </div>
+
+                <!-- Step 2: Select Clients -->
+                <div class="survey-step" data-step="2">
+                    <p style="margin-bottom: 24px; color: var(--gray-500);">Select the projects you're working on this week:</p>
+
+                    <div id="client-select-grid" class="client-select-grid">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <div class="add-client-row">
+                        <input type="text" id="new-client-name" placeholder="Add new project...">
+                        <button id="add-client-btn" class="small">Add</button>
+                    </div>
+
+                    <div style="margin-top: 32px; display: flex; gap: 12px;">
+                        <button id="clients-back">Back</button>
+                        <button id="clients-next" class="primary" disabled>Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Questions per client -->
+                <div class="survey-step" data-step="3">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="survey-progress"></div>
+                    </div>
+
+                    <div class="client-header" id="current-client-name"></div>
+
+                    <div id="questions-container">
+                        <!-- Questions populated here -->
+                    </div>
+
+                    <div class="client-nav">
+                        <button id="prev-client">Previous</button>
+                        <button id="next-client" class="primary">Next Project</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Complete -->
+                <div class="survey-step" data-step="4">
+                    <div class="survey-complete">
+                        <h2>Thank you!</h2>
+                        <p>Your responses have been recorded.</p>
+                        <button id="restart-survey" style="margin-top: 32px;">Submit Another Response</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ DASHBOARD SECTION ============ -->
+        <section id="dashboard">
+            <div class="dashboard-header">
+                <div>
+                    <h1 class="page-title">Dashboard</h1>
+                </div>
+                <div class="week-selector">
+                    <label style="margin-bottom: 0;">Week of</label>
+                    <select id="dashboard-week"></select>
+                </div>
+            </div>
+
+            <div id="dashboard-content">
+                <!-- Populated dynamically -->
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color red"></div>
+                    <span>1.0 – 1.4</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color orange"></div>
+                    <span>1.5 – 2.4</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color blue"></div>
+                    <span>2.5 – 3.4</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color green"></div>
+                    <span>3.5 – 4.0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ ADMIN SECTION ============ -->
+        <section id="admin">
+            <h1 class="page-title">Admin</h1>
+
+            <div class="admin-tabs">
+                <div class="admin-tab active" data-tab="stats">Overview</div>
+                <div class="admin-tab" data-tab="clients">Manage Clients</div>
+                <div class="admin-tab" data-tab="responses">Detailed Responses</div>
+            </div>
+
+            <!-- Stats Panel -->
+            <div class="admin-panel active" id="panel-stats">
+                <div class="week-selector" style="margin-bottom: 24px;">
+                    <label style="margin-bottom: 0;">Week of</label>
+                    <select id="admin-week"></select>
+                </div>
+
+                <div class="stats-grid" id="stats-grid">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Clients Panel -->
+            <div class="admin-panel" id="panel-clients">
+                <div class="form-group" style="max-width: 400px; margin-bottom: 32px;">
+                    <label>Add New Client</label>
+                    <div style="display: flex; gap: 12px;">
+                        <input type="text" id="admin-new-client" placeholder="Client name">
+                        <button id="admin-add-client" class="primary">Add</button>
+                    </div>
+                </div>
+
+                <div id="clients-list" class="clients-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Responses Panel -->
+            <div class="admin-panel" id="panel-responses">
+                <div class="filter-row">
+                    <div>
+                        <label>Week</label>
+                        <select id="responses-week"></select>
+                    </div>
+                    <div>
+                        <label>Client</label>
+                        <select id="responses-client">
+                            <option value="">All Clients</option>
+                        </select>
+                    </div>
+                </div>
+
+                <table class="responses-table" id="responses-table">
+                    <thead>
+                        <tr>
+                            <th>Respondent</th>
+                            <th>Client</th>
+                            <th>Clarity</th>
+                            <th>Plan</th>
+                            <th>Burn</th>
+                            <th>Momentum</th>
+                            <th>Quality</th>
+                            <th>Growth</th>
+                            <th>Submitted</th>
+                        </tr>
+                    </thead>
+                    <tbody id="responses-tbody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ============ CONFIGURATION ============
+        const API_BASE = '/api';
+
+        // ============ SURVEY QUESTIONS DATA ============
+        const QUESTIONS = [
+            {
+                id: 'objective_clarity',
+                label: 'Objective Clarity',
+                question: 'Do you know what we aim to do with this work?',
+                options: [
+                    'No idea',
+                    'General sense',
+                    'Clear what the work aims to do',
+                    'I know and I\'m inspired'
+                ]
+            },
+            {
+                id: 'next_week_plan',
+                label: 'Next Week Plan',
+                question: 'Do you know what you are working on next week?',
+                options: [
+                    'No idea',
+                    'General sense',
+                    'Clear what\'s on my plate',
+                    'I know and I\'m excited'
+                ]
+            },
+            {
+                id: 'resourcing_load',
+                label: 'Resourcing & Load',
+                question: 'How are you burning this week?',
+                options: [
+                    'I have bandwidth',
+                    'I\'m busy but good',
+                    'Ok for now but intense',
+                    'I\'m over, not doing my best work'
+                ]
+            },
+            {
+                id: 'momentum',
+                label: 'Momentum',
+                question: 'In the last week, how much progress did you make?',
+                options: [
+                    'We are spinning',
+                    'We are a bit stuck',
+                    'We are moving at pace',
+                    'We\'ve had unlocks, we are accelerating!'
+                ]
+            },
+            {
+                id: 'quality',
+                label: 'Quality',
+                question: 'Is your work meeting Redscout\'s standard right now?',
+                options: [
+                    'I\'m not sure',
+                    'Probably not',
+                    'Definitely',
+                    'The work is GREAT!'
+                ]
+            },
+            {
+                id: 'organic_growth',
+                label: 'Organic Growth',
+                question: 'Do you have a clear sense of what we could do next with this client?',
+                options: [
+                    'No idea',
+                    'General sense',
+                    'Clear what is needed next',
+                    'I know and we\'re actively talking to the clients about it'
+                ]
+            }
+        ];
+
+        // ============ STATE ============
+        let clients = [];
+        let selectedClients = [];
+        let currentClientIndex = 0;
+        let surveyEmail = '';
+        let surveyResponses = {};
+
+        // ============ UTILITY FUNCTIONS ============
+        async function api(endpoint, options = {}) {
+            const url = `${API_BASE}${endpoint}`;
+            const config = {
+                headers: { 'Content-Type': 'application/json' },
+                ...options
+            };
+            if (options.body) {
+                config.body = JSON.stringify(options.body);
+            }
+            const response = await fetch(url, config);
+            return response.json();
+        }
+
+        function getWeekStart(date = new Date()) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            d.setDate(diff);
+            return d.toISOString().split('T')[0];
+        }
+
+        // ============ NAVIGATION ============
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.dataset.section;
+
+                document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+                document.getElementById(section).classList.add('active');
+
+                if (section === 'dashboard') loadDashboard();
+                if (section === 'admin') loadAdmin();
+            });
+        });
+
+        // ============ SURVEY LOGIC ============
+        async function loadClients() {
+            clients = await api('/clients');
+            renderClientSelect();
+        }
+
+        function renderClientSelect() {
+            const grid = document.getElementById('client-select-grid');
+            grid.innerHTML = clients.map(c => `
+                <label class="client-checkbox" data-id="${c.id}">
+                    <input type="checkbox" value="${c.id}">
+                    <span class="check"></span>
+                    <span>${c.name}</span>
+                </label>
+            `).join('');
+
+            grid.querySelectorAll('.client-checkbox').forEach(cb => {
+                cb.addEventListener('click', () => {
+                    cb.classList.toggle('selected');
+                    updateSelectedClients();
+                });
+            });
+        }
+
+        function updateSelectedClients() {
+            const checkboxes = document.querySelectorAll('#client-select-grid .client-checkbox.selected');
+            selectedClients = Array.from(checkboxes).map(cb => ({
+                id: parseInt(cb.dataset.id),
+                name: cb.querySelector('span:last-child').textContent
+            }));
+            document.getElementById('clients-next').disabled = selectedClients.length === 0;
+        }
+
+        function showSurveyStep(step) {
+            document.querySelectorAll('.survey-step').forEach(s => s.classList.remove('active'));
+            document.querySelector(`.survey-step[data-step="${step}"]`).classList.add('active');
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            const client = selectedClients[currentClientIndex];
+
+            document.getElementById('current-client-name').textContent = `Project ${currentClientIndex + 1} of ${selectedClients.length}: ${client.name}`;
+
+            const progress = ((currentClientIndex) / selectedClients.length) * 100;
+            document.getElementById('survey-progress').style.width = `${progress}%`;
+
+            // Initialize responses for this client if not exists
+            if (!surveyResponses[client.id]) {
+                surveyResponses[client.id] = {};
+            }
+
+            container.innerHTML = QUESTIONS.map((q, i) => `
+                <div class="question-card">
+                    <div class="question-number">Question ${i + 1}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options-list">
+                        ${q.options.map((opt, oi) => `
+                            <label class="option-item ${surveyResponses[client.id][q.id] === (oi + 1) ? 'selected' : ''}" data-question="${q.id}" data-value="${oi + 1}">
+                                <input type="radio" name="${q.id}" value="${oi + 1}">
+                                <span class="option-radio"></span>
+                                <span class="option-label">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            container.querySelectorAll('.option-item').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    const question = opt.dataset.question;
+                    const value = parseInt(opt.dataset.value);
+
+                    // Clear other selections for this question
+                    opt.closest('.options-list').querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+
+                    surveyResponses[client.id][question] = value;
+                });
+            });
+
+            // Update navigation buttons
+            document.getElementById('prev-client').style.display = currentClientIndex === 0 ? 'none' : 'inline-block';
+            document.getElementById('next-client').textContent = currentClientIndex === selectedClients.length - 1 ? 'Submit' : 'Next Project';
+        }
+
+        function validateCurrentClient() {
+            const client = selectedClients[currentClientIndex];
+            const responses = surveyResponses[client.id] || {};
+            return QUESTIONS.every(q => responses[q.id] !== undefined);
+        }
+
+        async function submitSurvey() {
+            const responses = selectedClients.map(client => ({
+                client_id: client.id,
+                ...surveyResponses[client.id]
+            }));
+
+            await api('/survey', {
+                method: 'POST',
+                body: { email: surveyEmail, responses }
+            });
+
+            showSurveyStep(4);
+        }
+
+        // Survey event listeners
+        document.getElementById('email-next').addEventListener('click', () => {
+            const email = document.getElementById('survey-email').value.trim();
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            surveyEmail = email;
+            showSurveyStep(2);
+        });
+
+        document.getElementById('clients-back').addEventListener('click', () => showSurveyStep(1));
+
+        document.getElementById('clients-next').addEventListener('click', () => {
+            if (selectedClients.length === 0) return;
+            currentClientIndex = 0;
+            surveyResponses = {};
+            showSurveyStep(3);
+            renderQuestions();
+        });
+
+        document.getElementById('add-client-btn').addEventListener('click', async () => {
+            const input = document.getElementById('new-client-name');
+            const name = input.value.trim();
+            if (!name) return;
+
+            const result = await api('/clients', {
+                method: 'POST',
+                body: { name }
+            });
+
+            if (result.id) {
+                clients.push(result);
+                renderClientSelect();
+                input.value = '';
+            } else if (result.error) {
+                alert(result.error);
+            }
+        });
+
+        document.getElementById('prev-client').addEventListener('click', () => {
+            if (currentClientIndex > 0) {
+                currentClientIndex--;
+                renderQuestions();
+            }
+        });
+
+        document.getElementById('next-client').addEventListener('click', async () => {
+            if (!validateCurrentClient()) {
+                alert('Please answer all questions before continuing');
+                return;
+            }
+
+            if (currentClientIndex < selectedClients.length - 1) {
+                currentClientIndex++;
+                renderQuestions();
+            } else {
+                await submitSurvey();
+            }
+        });
+
+        document.getElementById('restart-survey').addEventListener('click', () => {
+            surveyEmail = '';
+            selectedClients = [];
+            currentClientIndex = 0;
+            surveyResponses = {};
+            document.getElementById('survey-email').value = '';
+            document.querySelectorAll('#client-select-grid .client-checkbox').forEach(cb => cb.classList.remove('selected'));
+            document.getElementById('clients-next').disabled = true;
+            showSurveyStep(1);
+        });
+
+        // ============ DASHBOARD LOGIC ============
+        async function loadDashboard() {
+            // Load available weeks
+            const weeks = await api('/dashboard/weeks');
+            const weekSelect = document.getElementById('dashboard-week');
+
+            if (weeks.length === 0) {
+                weekSelect.innerHTML = `<option value="${getWeekStart()}">Current Week</option>`;
+            } else {
+                weekSelect.innerHTML = weeks.map(w => `<option value="${w}">${formatWeek(w)}</option>`).join('');
+            }
+
+            renderDashboard(weekSelect.value);
+        }
+
+        function formatWeek(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        async function renderDashboard(week) {
+            const data = await api(`/dashboard?week=${week}`);
+            const container = document.getElementById('dashboard-content');
+
+            if (data.clients.length === 0) {
+                container.innerHTML = `<div class="no-data">No responses yet for this week.</div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="dashboard-grid">
+                    <div class="dashboard-header-row">
+                        <div class="dashboard-header-cell">Client</div>
+                        <div class="dashboard-header-cell">Clarity</div>
+                        <div class="dashboard-header-cell">Plan</div>
+                        <div class="dashboard-header-cell">Burn</div>
+                        <div class="dashboard-header-cell">Momentum</div>
+                        <div class="dashboard-header-cell">Quality</div>
+                        <div class="dashboard-header-cell">Growth</div>
+                    </div>
+                    ${data.clients.map(client => `
+                        <div class="dashboard-row">
+                            <div class="dashboard-cell">${client.client_name}</div>
+                            <div class="dashboard-cell">
+                                <div class="metric-cell ${client.metrics.clarity.color}">
+                                    ${client.metrics.clarity.avg || '—'}
+                                </div>
+                            </div>
+                            <div class="dashboard-cell">
+                                <div class="metric-cell ${client.metrics.plan.color}">
+                                    ${client.metrics.plan.avg || '—'}
+                                </div>
+                            </div>
+                            <div class="dashboard-cell">
+                                <div class="metric-cell ${client.metrics.burn.color}">
+                                    ${client.metrics.burn.avg || '—'}
+                                </div>
+                            </div>
+                            <div class="dashboard-cell">
+                                <div class="metric-cell ${client.metrics.momentum.color}">
+                                    ${client.metrics.momentum.avg || '—'}
+                                </div>
+                            </div>
+                            <div class="dashboard-cell">
+                                <div class="metric-cell ${client.metrics.quality.color}">
+                                    ${client.metrics.quality.avg || '—'}
+                                </div>
+                            </div>
+                            <div class="dashboard-cell">
+                                <div class="metric-cell ${client.metrics.growth.color}">
+                                    ${client.metrics.growth.avg || '—'}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        document.getElementById('dashboard-week').addEventListener('change', (e) => {
+            renderDashboard(e.target.value);
+        });
+
+        // ============ ADMIN LOGIC ============
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(`panel-${tab.dataset.tab}`).classList.add('active');
+
+                if (tab.dataset.tab === 'responses') loadResponses();
+            });
+        });
+
+        async function loadAdmin() {
+            // Load weeks for selectors
+            const weeks = await api('/dashboard/weeks');
+            const currentWeek = getWeekStart();
+            const weekOptions = weeks.length > 0
+                ? weeks.map(w => `<option value="${w}">${formatWeek(w)}</option>`).join('')
+                : `<option value="${currentWeek}">Current Week</option>`;
+
+            document.getElementById('admin-week').innerHTML = weekOptions;
+            document.getElementById('responses-week').innerHTML = weekOptions;
+
+            loadStats(weeks[0] || currentWeek);
+            loadClientsList();
+            loadClientFilter();
+        }
+
+        async function loadStats(week) {
+            const stats = await api(`/admin/stats?week=${week}`);
+            document.getElementById('stats-grid').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${stats.unique_respondents}</div>
+                    <div class="stat-label">Respondents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.clients_covered} / ${stats.total_active_clients}</div>
+                    <div class="stat-label">Clients Covered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.total_responses}</div>
+                    <div class="stat-label">Total Responses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${Math.round((stats.clients_covered / stats.total_active_clients) * 100) || 0}%</div>
+                    <div class="stat-label">Coverage Rate</div>
+                </div>
+            `;
+        }
+
+        document.getElementById('admin-week').addEventListener('change', (e) => {
+            loadStats(e.target.value);
+        });
+
+        async function loadClientsList() {
+            const allClients = await api('/clients/all');
+            document.getElementById('clients-list').innerHTML = allClients.map(c => `
+                <div class="client-row" data-id="${c.id}">
+                    <div>
+                        <span class="client-name">${c.name}</span>
+                        <span class="client-status ${c.active ? 'active' : ''}">${c.active ? 'Active' : 'Inactive'}</span>
+                    </div>
+                    <div class="client-actions">
+                        <button class="small toggle-client" data-id="${c.id}" data-active="${c.active}">
+                            ${c.active ? 'Deactivate' : 'Activate'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.toggle-client').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    const active = btn.dataset.active === 'true';
+                    await api(`/clients/${id}`, {
+                        method: 'PUT',
+                        body: { active: !active }
+                    });
+                    loadClientsList();
+                    loadClients();
+                });
+            });
+        }
+
+        document.getElementById('admin-add-client').addEventListener('click', async () => {
+            const input = document.getElementById('admin-new-client');
+            const name = input.value.trim();
+            if (!name) return;
+
+            const result = await api('/clients', {
+                method: 'POST',
+                body: { name }
+            });
+
+            if (result.id) {
+                input.value = '';
+                loadClientsList();
+                loadClients();
+                loadClientFilter();
+            } else if (result.error) {
+                alert(result.error);
+            }
+        });
+
+        async function loadClientFilter() {
+            const allClients = await api('/clients/all');
+            const select = document.getElementById('responses-client');
+            select.innerHTML = `<option value="">All Clients</option>` +
+                allClients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+
+        async function loadResponses() {
+            const week = document.getElementById('responses-week').value;
+            const clientId = document.getElementById('responses-client').value;
+
+            let url = `/admin/responses?week=${week}`;
+            if (clientId) url += `&client_id=${clientId}`;
+
+            const responses = await api(url);
+            const tbody = document.getElementById('responses-tbody');
+
+            if (responses.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--gray-500);">No responses found</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = responses.map(r => `
+                <tr>
+                    <td>${r.email}</td>
+                    <td>${r.client_name}</td>
+                    <td><span class="response-score s${r.objective_clarity}">${r.objective_clarity}</span></td>
+                    <td><span class="response-score s${r.next_week_plan}">${r.next_week_plan}</span></td>
+                    <td><span class="response-score s${getBurnScoreClass(r.resourcing_load)}">${r.resourcing_load}</span></td>
+                    <td><span class="response-score s${r.momentum}">${r.momentum}</span></td>
+                    <td><span class="response-score s${r.quality}">${r.quality}</span></td>
+                    <td><span class="response-score s${r.organic_growth}">${r.organic_growth}</span></td>
+                    <td>${new Date(r.submitted_at).toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        function getBurnScoreClass(score) {
+            // Invert for display: 1=green(4), 2=blue(3), 3=orange(2), 4=red(1)
+            return 5 - score;
+        }
+
+        document.getElementById('responses-week').addEventListener('change', loadResponses);
+        document.getElementById('responses-client').addEventListener('change', loadResponses);
+
+        // ============ INITIALIZATION ============
+        loadClients();
+    </script>
+</body>
+</html>
