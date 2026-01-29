@@ -47,10 +47,29 @@
         }
 
         .logo {
-            font-size: 12px;
-            letter-spacing: 0.15em;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-redscout {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
             text-transform: uppercase;
-            font-weight: 500;
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 16px;
+            background: var(--gray-300);
+        }
+
+        .logo-app {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray-500);
         }
 
         .nav-links {
@@ -76,7 +95,7 @@
         main {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 60px 40px;
+            padding: 40px 40px;
         }
 
         .page-title {
@@ -174,7 +193,7 @@
 
         /* ============ SURVEY STYLES ============ */
         .survey-container {
-            max-width: 600px;
+            max-width: 700px;
         }
 
         .survey-step {
@@ -187,26 +206,33 @@
 
         .client-select-grid {
             display: grid;
-            gap: 8px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
             margin-bottom: 24px;
         }
 
         .client-checkbox {
             display: flex;
             align-items: center;
-            padding: 16px;
-            border: 1px solid var(--gray-200);
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
 
         .client-checkbox:hover {
             border-color: var(--black);
+            background: var(--gray-100);
         }
 
         .client-checkbox.selected {
             border-color: var(--black);
-            background: var(--gray-100);
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .client-checkbox.selected:hover {
+            background: var(--gray-500);
         }
 
         .client-checkbox input {
@@ -214,25 +240,27 @@
         }
 
         .client-checkbox .check {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             border: 1px solid var(--gray-300);
-            margin-right: 16px;
+            margin-right: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.15s;
+            flex-shrink: 0;
         }
 
         .client-checkbox.selected .check {
-            border-color: var(--black);
-            background: var(--black);
+            border-color: var(--white);
+            background: var(--white);
         }
 
         .client-checkbox.selected .check::after {
             content: '✓';
-            color: var(--white);
-            font-size: 12px;
+            color: var(--black);
+            font-size: 11px;
+            font-weight: 600;
         }
 
         .add-client-row {
@@ -247,50 +275,60 @@
 
         /* Question card styling */
         .question-card {
-            margin-bottom: 32px;
-            padding-bottom: 32px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
             border-bottom: 1px solid var(--gray-200);
         }
 
         .question-card:last-child {
             border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
 
         .question-number {
-            font-size: 11px;
+            font-size: 10px;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             color: var(--gray-400);
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .question-text {
-            font-size: 18px;
-            font-weight: 400;
-            margin-bottom: 20px;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 12px;
         }
 
         .options-list {
             display: grid;
-            gap: 8px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
         }
 
         .option-item {
             display: flex;
             align-items: center;
-            padding: 16px;
-            border: 1px solid var(--gray-200);
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
+            font-size: 13px;
         }
 
         .option-item:hover {
-            border-color: var(--gray-400);
+            border-color: var(--black);
+            background: var(--gray-100);
         }
 
         .option-item.selected {
             border-color: var(--black);
-            background: var(--gray-100);
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .option-item.selected:hover {
+            background: var(--gray-500);
         }
 
         .option-item input {
@@ -298,11 +336,11 @@
         }
 
         .option-radio {
-            width: 18px;
-            height: 18px;
+            width: 14px;
+            height: 14px;
             border: 1px solid var(--gray-300);
             border-radius: 50%;
-            margin-right: 16px;
+            margin-right: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -310,13 +348,14 @@
         }
 
         .option-item.selected .option-radio {
-            border-color: var(--black);
+            border-color: var(--white);
+            background: var(--white);
         }
 
         .option-item.selected .option-radio::after {
             content: '';
-            width: 10px;
-            height: 10px;
+            width: 6px;
+            height: 6px;
             background: var(--black);
             border-radius: 50%;
         }
@@ -330,9 +369,9 @@
             letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--gray-500);
-            padding: 16px 0;
+            padding: 12px 0;
             border-bottom: 1px solid var(--black);
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .client-nav {
@@ -344,7 +383,7 @@
         .progress-bar {
             height: 2px;
             background: var(--gray-200);
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
 
         .progress-fill {
@@ -658,12 +697,21 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .client-select-grid,
+            .options-list {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <nav>
-        <div class="logo">Account Status Tracker</div>
+        <div class="logo">
+            <span class="logo-redscout">REDSCOUT</span>
+            <span class="logo-divider"></span>
+            <span class="logo-app">Account Status</span>
+        </div>
         <div class="nav-links">
             <a href="#" data-section="survey" class="active">Survey</a>
             <a href="#" data-section="dashboard">Dashboard</a>
@@ -958,6 +1006,7 @@
 
                 document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
                 document.getElementById(section).classList.add('active');
+                window.scrollTo(0, 0);
 
                 if (section === 'dashboard') loadDashboard();
                 if (section === 'admin') loadAdmin();
@@ -981,8 +1030,8 @@
             `).join('');
 
             grid.querySelectorAll('.client-checkbox').forEach(cb => {
-              cb.addEventListener('click', (e) => {
-    e.preventDefault();
+                cb.addEventListener('click', (e) => {
+                    e.preventDefault();
                     cb.classList.toggle('selected');
                     updateSelectedClients();
                 });
@@ -1034,7 +1083,8 @@
             `).join('');
 
             container.querySelectorAll('.option-item').forEach(opt => {
-                opt.addEventListener('click', () => {
+                opt.addEventListener('click', (e) => {
+                    e.preventDefault();
                     const question = opt.dataset.question;
                     const value = parseInt(opt.dataset.value);
 
