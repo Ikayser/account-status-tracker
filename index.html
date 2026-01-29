@@ -981,7 +981,8 @@
             `).join('');
 
             grid.querySelectorAll('.client-checkbox').forEach(cb => {
-                cb.addEventListener('click', () => {
+              cb.addEventListener('click', (e) => {
+    e.preventDefault();
                     cb.classList.toggle('selected');
                     updateSelectedClients();
                 });
