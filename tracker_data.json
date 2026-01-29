@@ -1,118 +1,18 @@
 {
   "clients": [
-    {
-      "id": 1,
-      "name": "Test Project",
-      "active": false,
-      "created_at": "2026-01-28T23:01:06.553Z"
-    },
-    {
-      "id": 2,
-      "name": "Acme Corp",
-      "active": false,
-      "created_at": "2026-01-28T23:01:16.100Z"
-    },
-    {
-      "id": 3,
-      "name": "Beta Industries",
-      "active": false,
-      "created_at": "2026-01-28T23:01:16.110Z"
-    },
-    {
-      "id": 4,
-      "name": "Aspen Dental",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.728Z"
-    },
-    {
-      "id": 5,
-      "name": "Best Buy",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.735Z"
-    },
-    {
-      "id": 6,
-      "name": "DOXA",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.739Z"
-    },
-    {
-      "id": 7,
-      "name": "DSG",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.743Z"
-    },
-    {
-      "id": 8,
-      "name": "Netflix",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.747Z"
-    },
-    {
-      "id": 9,
-      "name": "Quizlet",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.751Z"
-    },
-    {
-      "id": 10,
-      "name": "Rubrik",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.755Z"
-    },
-    {
-      "id": 11,
-      "name": "Tailored Brands",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.759Z"
-    },
-    {
-      "id": 12,
-      "name": "Thorne",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.763Z"
-    },
-    {
-      "id": 13,
-      "name": "Sephora",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.766Z"
-    },
-    {
-      "id": 14,
-      "name": "Storyworth",
-      "active": true,
-      "created_at": "2026-01-28T23:09:35.770Z"
-    }
+    { "id": 1, "name": "Aspen Dental", "active": true, "created_at": "2026-01-28T00:00:00.000Z" },
+    { "id": 2, "name": "Best Buy", "active": true, "created_at": "2026-01-28T00:00:00.000Z" },
+    { "id": 3, "name": "DOXA", "active": true, "created_at": "2026-01-28T00:00:00.000Z" },
+    { "id": 4, "name": "DSG", "active": true, "created_at": "2026-01-28T00:00:00.000Z" },
+    { "id": 5, "name": "Netflix", "active": true, "created_at": "2026-01-28T00:00:00.000Z" },
+    { "id": 6, "name": "Quizlet", "active": true, "created_at": "2026-01-28T00:00:00.000Z" },
+    { "id": 7, "name": "Rubrik", "active": true, "created_at": "2026-01-28T00:00:00.000Z" },
+    { "id": 8, "name": "Sephora", "active": true, "created_at": "2026-01-28T00:00:00.000Z" },
+    { "id": 9, "name": "Storyworth", "active": true, "created_at": "2026-01-28T00:00:00.000Z" },
+    { "id": 10, "name": "Tailored Brands", "active": true, "created_at": "2026-01-28T00:00:00.000Z" },
+    { "id": 11, "name": "Thorne", "active": true, "created_at": "2026-01-28T00:00:00.000Z" }
   ],
-  "responses": [
-    {
-      "id": 1,
-      "email": "test@example.com",
-      "client_id": 1,
-      "objective_clarity": 3,
-      "next_week_plan": 4,
-      "resourcing_load": 2,
-      "momentum": 3,
-      "quality": 4,
-      "organic_growth": 2,
-      "week_start": "2026-01-26",
-      "submitted_at": "2026-01-28T23:01:16.141Z"
-    },
-    {
-      "id": 2,
-      "email": "test@example.com",
-      "client_id": 2,
-      "objective_clarity": 2,
-      "next_week_plan": 2,
-      "resourcing_load": 3,
-      "momentum": 2,
-      "quality": 3,
-      "organic_growth": 1,
-      "week_start": "2026-01-26",
-      "submitted_at": "2026-01-28T23:01:16.141Z"
-    }
-  ],
-  "nextClientId": 15,
-  "nextResponseId": 3
+  "responses": [],
+  "nextClientId": 12,
+  "nextResponseId": 1
 }

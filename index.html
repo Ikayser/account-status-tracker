@@ -895,6 +895,8 @@
     <script>
         // ============ CONFIGURATION ============
         const API_BASE = '/api';
+        const ADMIN_PASSWORD = 'redscout';  // Change this password
+        let isAuthenticated = false;
 
         // ============ SURVEY QUESTIONS DATA ============
         const QUESTIONS = [
@@ -996,10 +998,28 @@
         }
 
         // ============ NAVIGATION ============
+        function checkPassword() {
+            if (isAuthenticated) return true;
+            const entered = prompt('Enter password to access this section:');
+            if (entered === ADMIN_PASSWORD) {
+                isAuthenticated = true;
+                return true;
+            }
+            if (entered !== null) {
+                alert('Incorrect password');
+            }
+            return false;
+        }
+
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const section = link.dataset.section;
+
+                // Require password for dashboard and admin
+                if ((section === 'dashboard' || section === 'admin') && !checkPassword()) {
+                    return;
+                }
 
                 document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
                 link.classList.add('active');
