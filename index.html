@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Status Tracker</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='22' font-weight='900' fill='%23fff'%3ER%3C/text%3E%3C/svg%3E">
     <style>
         * {
             margin: 0;
@@ -678,28 +679,175 @@
         /* ============ RESPONSIVE ============ */
         @media (max-width: 768px) {
             nav {
-                padding: 16px 20px;
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .logo {
+                gap: 10px;
+            }
+
+            .logo-redscout {
+                font-size: 14px;
+            }
+
+            .logo-app {
+                font-size: 9px;
             }
 
             .nav-links {
-                gap: 20px;
+                gap: 16px;
+            }
+
+            .nav-links a {
+                font-size: 11px;
             }
 
             main {
-                padding: 40px 20px;
+                padding: 24px 16px;
             }
 
-            .dashboard-header-row,
-            .dashboard-row {
-                grid-template-columns: 120px repeat(6, 1fr);
+            .page-title {
+                font-size: 24px;
+                margin-bottom: 24px;
             }
 
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .survey-container {
+                max-width: 100%;
             }
 
             .client-select-grid,
             .options-list {
+                grid-template-columns: 1fr;
+            }
+
+            .question-text {
+                font-size: 14px;
+            }
+
+            .option-item {
+                padding: 12px;
+            }
+
+            .client-header {
+                font-size: 10px;
+                padding: 10px 0;
+                margin-bottom: 20px;
+            }
+
+            .client-nav {
+                flex-direction: column;
+            }
+
+            .client-nav button {
+                width: 100%;
+            }
+
+            /* Dashboard mobile */
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .dashboard-grid {
+                overflow-x: auto;
+                font-size: 12px;
+            }
+
+            .dashboard-header-row,
+            .dashboard-row {
+                grid-template-columns: 100px repeat(6, 60px);
+                min-width: 460px;
+            }
+
+            .dashboard-header-cell,
+            .dashboard-cell {
+                padding: 10px 6px;
+            }
+
+            .metric-cell {
+                min-height: 36px;
+                font-size: 13px;
+            }
+
+            .legend {
+                flex-wrap: wrap;
+                gap: 12px;
+                font-size: 11px;
+            }
+
+            /* Admin mobile */
+            .admin-tabs {
+                overflow-x: auto;
+                gap: 0;
+            }
+
+            .admin-tab {
+                padding: 10px 16px;
+                white-space: nowrap;
+                font-size: 11px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
+            .filter-row {
+                flex-direction: column;
+            }
+
+            .filter-row select {
+                width: 100%;
+            }
+
+            .responses-table {
+                display: block;
+                overflow-x: auto;
+                font-size: 11px;
+            }
+
+            .responses-table th,
+            .responses-table td {
+                padding: 8px 6px;
+                white-space: nowrap;
+            }
+
+            .client-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            button {
+                padding: 10px 16px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            select {
+                padding: 10px 12px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-divider,
+            .logo-app {
+                display: none;
+            }
+
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -1073,6 +1221,7 @@
         }
 
         function renderQuestions() {
+            window.scrollTo(0, 0);
             const container = document.getElementById('questions-container');
             const client = selectedClients[currentClientIndex];
 
